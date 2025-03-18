@@ -1,0 +1,8 @@
+langchain
+langchain-community
+chromadb
+langchain-chroma
+langchain-ollama
+bs4
+flask
+waitress

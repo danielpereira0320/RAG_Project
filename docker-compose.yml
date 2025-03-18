@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  flask-app:
+    image: rag-chatbot
+    container_name: my-rag-chatbot
+    restart: always
+    network_mode: "host"  # Matches --network=host
+    environment:
+      - CHROMA_HOST=localhost
+      - CHROMA_PORT=8000
+      - OLLAMA_HOST=localhost
+      - OLLAMA_PORT=11434
+    volumes:
+      - /home/daniel375/data:/project/data  # Matches --mount type=bind
+
+  chromadb:
+    image: chromadb/chroma
+    container_name: my-chromadb
+    restart: always
+    network_mode: "host"  # Ensures it runs on localhost:8000
+
+  ollama:
+    image: ollama/ollama
+    container_name: my-ollama
+    restart: always
+    network_mode: "host"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    volumes:
+      - /home/daniel375/data:/project/data
+      - ollama_models:/root/.ollama/models
+
+volumes:
+  ollama_models:
+
+
