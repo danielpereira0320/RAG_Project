@@ -6,6 +6,7 @@ from settings import num_docs, kb_collection
 
 chroma_client = create_chroma_client()
 llm = create_llm()
+llm2 = create_llm(num_ctx=4096)
 
 def ask_question(query, user_id):
     collection = create_chroma_collection(chroma_client, kb_collection)
@@ -13,16 +14,16 @@ def ask_question(query, user_id):
     retriever = get_retriever(vectorstore, num_docs)
 
     history = get_chat_history(user_id=user_id)
-    refined_query = refine_query(query=query, chat_history=history, llm=llm)
+    refined_query = refine_query(query=query, chat_history=history, llm=llm2)
     documents = get_documents_from_chroma(query=refined_query, retriever=retriever)
-    relevant_documents = get_relevant_documents(query=query, documents=documents, history=history, llm=llm)
+    relevant_documents = get_relevant_documents(query=query, documents=documents, history=history, llm=llm2)
     
     system_prompt = f"""
     You are the customer service assistant for the company 'Clinicpoints'. 
     Your name is Clinicpoint's Chat Assistant.
     Use the following pieces of retrieved context to answer 
-    the question. If you don't know the answer, say that you 
-    don't know. Keep the answer concise. Answer only in English and not in any other language.
+    the question. If you don't know the answer, say that you don't know. 
+    Keep the answer concise and mention all the details in the documentation.
     You can refer to the chat history to understand past conversations but answer only the question 
     and not the questions given in the chat history. The question to be answered is at the end.
     Don't use the chat history to answer. Refer to the context as documentation.

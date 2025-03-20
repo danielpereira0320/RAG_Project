@@ -33,19 +33,19 @@ def extract_text_from_html(file_path):
     # Loop through all relevant elements
     for tag in soup.find_all(["h1", "h2", "h3", "h4", "h5", "p", "ul", "ol", "table"]):
         if tag.name == "h1":  
-            save_current(current_section=current_section, current_content=current_content, documents=documents)
+            documents = save_current(current_section=current_section, current_content=current_content, documents=documents)
             current_section = tag.get_text(strip=True)
             current_content = []
             using_h1_structure = True  # Ensure we're in the first part
 
         elif tag.name == "h3" and not using_h1_structure:  
-            save_current(current_section=current_section, current_content=current_content, documents=documents)
+            documents = save_current(current_section=current_section, current_content=current_content, documents=documents)
             current_section = tag.get_text(strip=True)
             current_content = []
 
         elif tag.name == "h3" and using_h1_structure:  
             # If an h3 appears AFTER h1, it means the "Modules" section has started
-            save_current(current_section=current_section, current_content=current_content, documents=documents)
+            documents = save_current(current_section=current_section, current_content=current_content, documents=documents)
             current_section = tag.get_text(strip=True)
             current_content = []
             using_h1_structure = False  # Switch to using h3 as section headers

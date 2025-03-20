@@ -8,7 +8,7 @@ def create_chroma_client():
 
 def create_chroma_collection(chroma_client, collection_name):
     try:
-        return chroma_client.create_collection(name=collection_name)
+        return chroma_client.create_collection(name=collection_name, embedding_function=create_llm_embed())
     except:
         return chroma_client.get_collection(name=collection_name)        
 
