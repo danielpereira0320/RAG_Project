@@ -35,7 +35,7 @@ def get_relevant_documents(query, documents, history, llm):
         except ValueError:
             score = 5  # Default to neutral score if parsing fails
 
-        reranked_docs.append((doc, score))
+        reranked_docs.append((doc.page_content, score))
 
     # Sort documents based on LLM relevance score (higher is better)
     sorted_docs = sorted(reranked_docs, key=lambda x: x[1], reverse=True)
