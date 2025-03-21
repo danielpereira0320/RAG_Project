@@ -17,7 +17,6 @@ sudo apt install -y docker.io
 sudo systemctl start docker
 sudo systemctl enable docker
 sudo usermod -aG docker $USER
-newgrp docker
 
 echo "Configuring Docker for NVIDIA support..."
 distribution=$(. /etc/os-release; echo ${ID}${VERSION_ID//./})
@@ -33,12 +32,29 @@ docker pull chromadb/chroma
 echo "Creating necessary directories..."
 mkdir -p ollama_models
 
-echo "Running a temporary Ollama container to pull models..."
-docker run --rm --gpus all -v "$(pwd)/ollama_models:/root/.ollama/models" ollama/ollama ollama pull mxbai-embed-large
-docker run --rm --gpus all -v "$(pwd)/ollama_models:/root/.ollama/models" ollama/ollama ollama pull llama3.2
+echo "Starting Ollama container..."
+docker run -d --gpus all \
+  --name ollama_temp \
+  -v "$(pwd)/ollama_models:/root/.ollama/models" \
+  ollama/ollama serve
+
+echo "Waiting for Ollama to be ready..."
+sleep 5  # Give it time to start
+
+echo "Pulling models into the running container..."
+docker exec -it ollama_temp ollama pull mxbai-embed-large || echo "Failed to pull mxbai-embed-large"
+docker exec -it ollama_temp ollama pull llama3 || echo "Failed to pull llama3"
+
+echo "Stopping and removing temporary Ollama container..."
+docker stop ollama_temp
+docker rm ollama_temp
+
+echo "Model download complete!"
+
 
 echo "Setting up and starting the chatbot application..."
 APP_DIR=$(pwd)
 echo "APP_PATH=$APP_DIR" > .env
+sudo apt install -y docker-compose-plugin
 docker-compose --env-file .env up -d --build
 
