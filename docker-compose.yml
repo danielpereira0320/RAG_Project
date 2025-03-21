@@ -5,20 +5,23 @@ services:
     image: rag-chatbot
     container_name: my-rag-chatbot
     restart: always
-    network_mode: "host"  # Matches --network=host
+    network_mode: "host"
+    depends_on:
+      - chromadb
+      - ollama
     environment:
-      - CHROMA_HOST=localhost
+      - CHROMA_HOST=chromadb
       - CHROMA_PORT=8000
-      - OLLAMA_HOST=localhost
+      - OLLAMA_HOST=ollama
       - OLLAMA_PORT=11434
     volumes:
-      - /home/daniel375/data:/project/data  # Matches --mount type=bind
+      - ${APP_PATH}/data:/project/data
 
   chromadb:
     image: chromadb/chroma
     container_name: my-chromadb
     restart: always
-    network_mode: "host"  # Ensures it runs on localhost:8000
+    network_mode: "host"
 
   ollama:
     image: ollama/ollama
@@ -32,12 +35,9 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-
     volumes:
-      - /home/daniel375/data:/project/data
-      - ollama_models:/root/.ollama/models
+      - ${APP_PATH}/ollama_models:/root/.ollama/models
 
 volumes:
   ollama_models:
-
 
