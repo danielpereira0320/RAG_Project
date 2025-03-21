@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from rag_server import ask_question
+from rag_server import ask_question, query_documents
 from update_db import update_collection, clear_entire_history, clear_user_history
 from waitress import serve
 from chat_history import get_entire_chat
@@ -18,6 +18,20 @@ def rag_chat():
     ### process message
     result = ask_question(query=query, user_id=uid)
     return result
+
+@app.route('/getdocs', methods = ["POST"])
+def getdocs():
+    
+    data = request.get_json()
+
+    ### takes message - str
+    query = data["query"]
+    uid = data["uid"]
+    
+    ### process message
+    result = query_documents(query=query, user_id=uid)
+    return result
+
 
 @app.route('/getchatall', methods = ["POST"])
 def get_chat_all():

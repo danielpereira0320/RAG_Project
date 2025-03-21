@@ -41,3 +41,13 @@ def ask_question(query, user_id):
     save_chat_to_chromadb(user_id, query, response)
     return response
     
+def query_documents(query, user_id):
+    collection = create_chroma_collection(chroma_client, kb_collection)
+    vectorstore = create_vector_store(chroma_client, kb_collection)
+    retriever = get_retriever(vectorstore, num_docs)
+
+    history = get_chat_history(user_id=user_id)
+    refined_query = refine_query(query=query, chat_history=history, llm=llm2)
+    documents = get_documents_from_chroma(query=refined_query, retriever=retriever)
+    relevant_documents = get_relevant_documents(query=query, documents=documents, history=history, llm=llm2)
+    return relevant_documents
