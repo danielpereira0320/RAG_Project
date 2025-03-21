@@ -1,12 +1,12 @@
 from chroma_server import create_chroma_client, create_chroma_collection, create_vector_store, get_retriever, get_documents_from_chroma
-from ollama_server import create_llm
+from ollama_server import create_llm, create_llm2
 from rag_chain_initiate import refine_query, get_relevant_documents
 from chat_history import save_chat_to_chromadb, get_chat_history
 from settings import num_docs, kb_collection
 
 chroma_client = create_chroma_client()
 llm = create_llm()
-llm2 = create_llm(num_ctx=4096)
+llm2 = create_llm2(num_ctx=4096)
 
 def ask_question(query, user_id):
     collection = create_chroma_collection(chroma_client, kb_collection)

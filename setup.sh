@@ -65,6 +65,7 @@ sleep 5  # Give it time to start
 echo "Pulling models into the running container..."
 docker exec -it ollama_temp ollama pull mxbai-embed-large || echo "Failed to pull mxbai-embed-large"
 docker exec -it ollama_temp ollama pull llama3.1 || echo "Failed to pull llama3.1"
+docker exec -it ollama_temp ollama pull llama3.2 || echo "Failed to pull llama3.2"
 
 echo "Stopping and removing temporary Ollama container..."
 docker stop ollama_temp
