@@ -1,4 +1,4 @@
-llm_model = "llama3.3" # The model used for queries
+llm_model = "llama3.1" # The model used for queries
 embed_model = "mxbai-embed-large" # The model used for document queries. If the model is changed, the collections have to be reset.
 num_ctx = 24000 # The number of tokens that the model will use. Depends on context size.
 num_docs = 50 # The number of documents imported. More documents mean higher context size.
