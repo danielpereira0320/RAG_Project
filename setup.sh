@@ -52,6 +52,7 @@ docker pull chromadb/chroma
 
 echo "Creating necessary directories..."
 mkdir -p ollama_models
+mkdir -p chroma_cache
 
 echo "Starting Ollama container..."
 docker run -d --gpus all \

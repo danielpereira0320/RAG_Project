@@ -1,21 +1,19 @@
 from chroma_server import create_chroma_client, create_chroma_collection, create_vector_store, get_retriever, get_documents_from_chroma
-from ollama_server import create_llm, create_llm2
+from ollama_server import create_llm
 from rag_chain_initiate import refine_query, get_relevant_documents
 from chat_history import save_chat_to_chromadb, get_chat_history
 from settings import num_docs, kb_collection
 
 chroma_client = create_chroma_client()
-llm1 = create_llm(num_ctx=32000)
 llm = create_llm()
-llm2 = create_llm2(num_ctx=4096)
 
 def ask_question(query, user_id):
     collection = create_chroma_collection(chroma_client, kb_collection)
     vectorstore = create_vector_store(chroma_client, kb_collection)
-    retriever = get_retriever(vectorstore, 20)
+    retriever = get_retriever(vectorstore, 10)
 
     history = get_chat_history(user_id=user_id)
-    refined_query = refine_query(query=query, chat_history=history, llm=llm2)
+    refined_query = refine_query(query=query, chat_history=history, llm=llm)
     documents = get_documents_from_chroma(query=refined_query, retriever=retriever)
     docs = []
     for doc in documents:
@@ -40,7 +38,7 @@ def ask_question(query, user_id):
     
     """
     
-    response = llm1.invoke(system_prompt)
+    response = llm.invoke(system_prompt)
     save_chat_to_chromadb(user_id, query, response)
     return response
     
@@ -50,9 +48,9 @@ def ask_question_refine(query, user_id):
     retriever = get_retriever(vectorstore, num_docs)
 
     history = get_chat_history(user_id=user_id)
-    refined_query = refine_query(query=query, chat_history=history, llm=llm2)
+    refined_query = refine_query(query=query, chat_history=history, llm=llm)
     documents = get_documents_from_chroma(query=refined_query, retriever=retriever)
-    relevant_documents = get_relevant_documents(query=query, documents=documents, history=history, llm=llm2)
+    relevant_documents = get_relevant_documents(query=query, documents=documents, history=history, llm=llm)
     
     system_prompt = f"""
     You are the customer service assistant for the company 'Clinicpoints'. 
@@ -83,7 +81,7 @@ def query_documents(query, user_id):
     retriever = get_retriever(vectorstore, num_docs)
 
     history = get_chat_history(user_id=user_id)
-    refined_query = refine_query(query=query, chat_history=history, llm=llm2)
+    refined_query = refine_query(query=query, chat_history=history, llm=llm)
     documents = get_documents_from_chroma(query=refined_query, retriever=retriever)
-    relevant_documents = get_relevant_documents(query=query, documents=documents, history=history, llm=llm2)
+    relevant_documents = get_relevant_documents(query=query, documents=documents, history=history, llm=llm)
     return relevant_documents

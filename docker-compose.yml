@@ -22,6 +22,9 @@ services:
     container_name: my-chromadb
     restart: always
     network_mode: "host"
+    volumes:
+      - ${APP_PATH}/chroma_cache:/root/.cache 
+
 
   ollama:
     image: ollama/ollama

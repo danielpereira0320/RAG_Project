@@ -19,7 +19,7 @@ def rag_chat():
     result = ask_question(query=query, user_id=uid)
     return result
 
-@app.route('/chatrefined', methods = ["POST"])
+@app.route('/chat_scored', methods = ["POST"])
 def rag_chat2():
     
     data = request.get_json()
