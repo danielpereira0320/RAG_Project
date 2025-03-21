@@ -13,8 +13,8 @@ RUN python -m pip install --upgrade pip
 # Install dependencies
 RUN pip install -r requirements.txt
 
-# Expose port 8080 for the Flask app
-EXPOSE 8080
+# Expose port 5000 for the Flask app
+EXPOSE 5000
 
 # Run Gunicorn with optimized worker count
 CMD ["python", "app.py"]
