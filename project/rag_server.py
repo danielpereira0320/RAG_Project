@@ -5,7 +5,7 @@ from chat_history import save_chat_to_chromadb, get_chat_history
 from settings import num_docs, kb_collection
 
 chroma_client = create_chroma_client()
-llm1 = create_llm(num_ctx=24000)
+llm1 = create_llm(num_ctx=32000)
 llm = create_llm()
 llm2 = create_llm2(num_ctx=4096)
 
