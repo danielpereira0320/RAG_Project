@@ -39,4 +39,4 @@ def get_relevant_documents(query, documents, history, llm):
 
     # Sort documents based on LLM relevance score (higher is better)
     sorted_docs = sorted(reranked_docs, key=lambda x: x[1], reverse=True)
-    return [doc[0] for doc in sorted_docs][:15]
+    return [doc[0] for doc in sorted_docs][:10]
