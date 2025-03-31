@@ -74,10 +74,15 @@ docker rm ollama_temp
 
 echo "Model download complete!"
 
+sudo apt install -y docker-compose
+
+echo "Building the chatbot docker image..."
+cd project
+docker build -t rag-chatbot:latest .
+cd ../
 
 echo "Setting up and starting the chatbot application..."
 APP_DIR=$(pwd)
 echo "APP_PATH=$APP_DIR" > .env
-sudo apt install -y docker-compose-plugin
 docker-compose --env-file .env up -d --build
 
